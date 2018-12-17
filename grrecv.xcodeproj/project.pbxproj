@@ -248,7 +248,7 @@
 					"-I/usr/local/Cellar/gr-osmosdr/0.1.4_4/include",
 					"-I/usr/local/include",
 					"-I/usr/local/Cellar/gnuradio/3.7.13.4_1/include",
-					"-I/mnt/pi/src/gr-tujasdr/include",
+					"-I/mnt/build/src/gr-tujasdr/include",
 				);
 				OTHER_LDFLAGS = (
 					"-L/usr/local/Cellar/gnuradio/3.7.13.4_1/lib",
@@ -278,7 +278,7 @@
 					"-I/usr/local/Cellar/gr-osmosdr/0.1.4_4/include",
 					"-I/usr/local/include",
 					"-I/usr/local/Cellar/gnuradio/3.7.13.4_1/include",
-					"-I/mnt/pi/src/gr-tujasdr/include",
+					"-I/mnt/build/src/gr-tujasdr/include",
 				);
 				OTHER_LDFLAGS = (
 					"-L/usr/local/Cellar/gnuradio/3.7.13.4_1/lib",
