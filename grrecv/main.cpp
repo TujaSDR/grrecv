@@ -17,6 +17,9 @@
 #include <tujasdr/unix_dgram_sink_b.h>
 #include <tujasdr/tx_processor_cc.h>
 
+#include <gnuradio/filter/fft_filter_ccc.h>
+#include <gnuradio/filter/fir_filter_ccc.h>
+#include <gnuradio/filter/firdes.h>
 #include <gnuradio/realtime.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/filter/pfb_arb_resampler_fff.h>
@@ -34,6 +37,17 @@ int main(int argc, const char * argv[]) {
     // Temporary fs
     double fs = 89286;
 
+    std::vector<gr_complex> Q =
+    gr::filter::firdes::complex_band_pass(1.0,
+                                          fs, 300.,
+                                          3300.,
+                                          250.0);
+    
+    auto filter = gr::filter::fft_filter_ccc::make(1, Q);
+    //auto filter = gr::filter::fir_filter_ccc::make(1, Q);
+    
+    printf("fft om: %d\n", filter->output_multiple());
+
     int rt = gr::enable_realtime_scheduling();
 
     printf("rt = %d\n", rt);
@@ -49,14 +63,19 @@ int main(int argc, const char * argv[]) {
     tuja_source->set_thread_priority(90);
     tuja_sink->set_thread_priority(90);
 
-    int prio0 = tuja_source->thread_priority();
+    /*int prio0 = tuja_source->thread_priority();
     int prio1 = tuja_sink->thread_priority();
-
     printf("Prio: %d\n", prio0);
-    printf("Prio: %d\n", prio1);
+    printf("Prio: %d\n", prio1);*/
+    
+    auto sine_source_c = gr::tujasdr::fast_sine_source_c::make(fs, 800., 0.5);
     
     rx_block->connect(tuja_source, 0, tx_processor_cc, 0);
-    rx_block->connect(tx_processor_cc, 0, tuja_sink, 0);
+    rx_block->connect(tx_processor_cc, 0, filter, 0);
+    rx_block->connect(filter, 0, tuja_sink, 0);
+    
+    //rx_block->connect(sine_source_c, 0, filter, 0);
+    //rx_block->connect(filter, 0, tuja_sink, 0);
     
     //rx_block->connect(sine_source, 0, mix, 1);
     //rx_block->connect(mix, 0, tuja_sink, 0);

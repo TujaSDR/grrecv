@@ -21,8 +21,14 @@ gr_filter_dep = dependency('gnuradio-filter')
 gnuradio_dep = [gr_runtime_dep, gr_tujasdr_dep, gr_blocks_dep,
     gr_analog_dep, gr_filter_dep, boost_dep]
 
-grrecv_sources = ['main.cpp',]
-
 executable('grrecv',
-    grrecv_sources,
+    ['main.cpp',],
+    dependencies: [gnuradio_dep,])
+
+executable('trx-wsjtx',
+    ['trx-wsjtx.cpp',],
+    dependencies: [gnuradio_dep,])
+
+executable('trx-cw',
+    ['trx-cw.cpp',],
     dependencies: [gnuradio_dep,])
